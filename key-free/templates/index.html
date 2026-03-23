@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Obtenir ma clé — KeyFree{% endblock %}
+
+{% block content %}
+<!-- Orbiting blobs for depth -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+  <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
+  <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow" style="animation-delay:2s"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse-slow" style="animation-delay:4s"></div>
+</div>
+
+<main class="flex-1 flex items-center justify-center px-4 py-16 relative z-10">
+  <div class="text-center max-w-2xl mx-auto animate-float">
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-sm text-purple-300 font-medium mb-8">
+      <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+      Clés disponibles · Accès gratuit
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+      Votre <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">clé unique</span>
+      <br />vous attend
+    </h1>
+
+    <p class="text-gray-400 text-lg md:text-xl mb-12 leading-relaxed">
+      Complétez une étape rapide et recevez votre clé personnelle instantanément.<br/>
+      <span class="text-gray-500 text-sm">100 % gratuit · Aucun compte requis</span>
+    </p>
+
+    <!-- CTA Button -->
+    <a
+      id="claim-btn"
+      href="/go"
+      class="btn-primary inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-white font-semibold text-lg"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/>
+      </svg>
+      Obtenir ma clé
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+      </svg>
+    </a>
+
+    <!-- Steps -->
+    <div class="mt-16 grid grid-cols-3 gap-6 text-center">
+      {% for step in [
+        ("01", "Clique", "Appuie sur le bouton ci-dessus"),
+        ("02", "Valide", "Complète l'étape Linkvertise"),
+        ("03", "Reçois", "Ta clé unique s'affiche"),
+      ] %}
+      <div class="glass rounded-2xl p-5">
+        <div class="text-xs font-bold text-purple-400 mb-2 tracking-widest">ÉTAPE {{ step[0] }}</div>
+        <div class="font-semibold text-white text-sm mb-1">{{ step[1] }}</div>
+        <div class="text-gray-500 text-xs">{{ step[2] }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+<footer class="text-center text-gray-600 text-xs py-6 relative z-10">
+  KeyFree &mdash; Distribution de clés sécurisée
+</footer>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Admin — KeyFree{% endblock %}
+
+{% block extra_head %}
+<style>
+  .stat-card {
+    background: rgba(102,126,234,0.08);
+    border: 1px solid rgba(102,126,234,0.2);
+    border-radius: 1.5rem;
+    transition: border-color 0.3s;
+  }
+  .stat-card:hover { border-color: rgba(102,126,234,0.5); }
+  textarea {
+    resize: vertical;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: border-color 0.3s;
+  }
+  textarea:focus { border-color: #667eea; outline: none; }
+  .badge-added { background: rgba(34,197,94,0.2); color: #4ade80; }
+  .badge-skipped { background: rgba(245,158,11,0.2); color: #fbbf24; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+  <div class="absolute -top-40 -right-40 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
+  <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
+</div>
+
+<div class="relative z-10 min-h-screen">
+  <!-- Navbar -->
+  <header class="glass border-b border-white/5 px-6 py-4">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-purple-500/30 flex items-center justify-center">
+          <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/>
+          </svg>
+        </div>
+        <span class="font-bold text-white">KeyFree Admin</span>
+        <span class="text-xs text-gray-600 font-mono">Dashboard</span>
+      </div>
+      <a href="/admin/logout" class="text-sm text-gray-500 hover:text-red-400 transition-colors flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+        </svg>
+        Déconnexion
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10 space-y-8">
+
+    <!-- Flash messages -->
+    {% set added = request.query_params.get('added') %}
+    {% set skipped = request.query_params.get('skipped') %}
+    {% if added is not none %}
+    <div class="glass rounded-2xl px-6 py-4 flex items-center gap-4">
+      <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div class="flex gap-3 flex-wrap">
+        <span class="badge-added rounded-full px-3 py-0.5 text-sm font-medium">+{{ added }} ajoutée(s)</span>
+        {% if skipped and skipped != '0' %}
+        <span class="badge-skipped rounded-full px-3 py-0.5 text-sm font-medium">{{ skipped }} ignorée(s) (doublon)</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <!-- Live counter -->
+      <div class="stat-card p-8">
+        <div class="text-sm text-gray-500 font-medium uppercase tracking-widest mb-3">Clés disponibles</div>
+        <div class="flex items-end gap-3">
+          <span id="key-counter" class="text-6xl font-extrabold text-white">{{ remaining }}</span>
+          <span class="text-gray-600 mb-2 text-sm">restante(s)</span>
+        </div>
+        <div class="mt-4 flex items-center gap-2 text-xs text-gray-600">
+          <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+          Mise à jour automatique toutes les 5s
+        </div>
+      </div>
+
+      <!-- Quick info -->
+      <div class="stat-card p-8 flex flex-col justify-center">
+        <div class="text-sm text-gray-500 font-medium uppercase tracking-widest mb-4">Accès rapide</div>
+        <a href="/" target="_blank" class="flex items-center gap-2 text-purple-400 hover:text-purple-300 text-sm mb-3 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+          Voir la page utilisateur
+        </a>
+        <div class="text-xs text-gray-600 mt-2">Route de test : <code class="text-purple-400">/claim?token=...</code></div>
+      </div>
+    </div>
+
+    <!-- Add Keys -->
+    <div class="glass rounded-3xl p-8">
+      <h2 class="text-xl font-bold text-white mb-1">Ajouter des clés</h2>
+      <p class="text-gray-500 text-sm mb-6">Colle tes clés ci-dessous, une par ligne. Les doublons seront ignorés automatiquement.</p>
+
+      <form method="POST" action="/admin/add-keys" id="add-keys-form">
+        <textarea
+          name="keys_text"
+          id="keys-textarea"
+          rows="8"
+          placeholder="KEY-XXXX-YYYY-ZZZZ&#10;KEY-AAAA-BBBB-CCCC&#10;KEY-1234-5678-9012"
+          required
+          class="w-full rounded-2xl px-5 py-4 text-white placeholder-gray-700 font-mono text-sm mb-6"
+        ></textarea>
+
+        <div class="flex items-center gap-4 flex-wrap">
+          <button
+            type="submit"
+            class="btn-primary inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-white font-semibold"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            Ajouter les clés
+          </button>
+          <button
+            type="button"
+            onclick="document.getElementById('keys-textarea').value=''"
+            class="text-sm text-gray-600 hover:text-gray-400 transition-colors"
+          >
+            Vider
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Live counter every 5 seconds
+  async function refreshCounter() {
+    try {
+      const res = await fetch('/admin/stats');
+      if (res.ok) {
+        const data = await res.json();
+        const el = document.getElementById('key-counter');
+        if (el) el.textContent = data.remaining;
+      }
+    } catch (e) { /* silently ignore */ }
+  }
+  setInterval(refreshCounter, 5000);
+</script>
+{% endblock %}

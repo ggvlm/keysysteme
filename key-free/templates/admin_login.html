@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Admin — KeyFree{% endblock %}
+
+{% block content %}
+<div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+  <div class="absolute -top-40 right-0 w-96 h-96 bg-red-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+</div>
+
+<main class="flex-1 flex items-center justify-center px-4 py-16 relative z-10">
+  <div class="w-full max-w-md">
+    <div class="glass rounded-3xl p-10 glow">
+      <!-- Icon -->
+      <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-purple-500/20 flex items-center justify-center">
+        <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+        </svg>
+      </div>
+
+      <h1 class="text-2xl font-bold text-center text-white mb-1">Panel Admin</h1>
+      <p class="text-gray-500 text-sm text-center mb-8">Accès réservé aux administrateurs</p>
+
+      {% if request.query_params.get('error') %}
+      <div class="bg-red-500/20 border border-red-500/40 rounded-xl px-4 py-3 mb-6 text-red-400 text-sm text-center">
+        ❌ Mot de passe incorrect
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/admin/login" id="admin-login-form">
+        <label class="block text-gray-400 text-sm font-medium mb-2" for="password">
+          Mot de passe
+        </label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          required
+          autofocus
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors mb-6"
+        />
+        <button
+          type="submit"
+          class="btn-primary w-full py-3.5 rounded-xl text-white font-semibold"
+        >
+          Se connecter
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+{% endblock %}
